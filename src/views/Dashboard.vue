@@ -21,7 +21,47 @@
                     <div class="upload-icon">
                         <Layers :size="32" class="icon" />
                     </div>
-                    <Upload/>
+                    <Upload @on-complete="handleUploadComplete" />
+                </div>
+            </div>
+        </section>
+        <section class="projects">
+            <div class="section-inner">
+                <div class="section-head">
+                    <div class="copy">
+                        <h2>Projects</h2>
+                        <p>你最新的工程和社区分享都在这里！</p>
+                    </div>
+                </div>
+                <div class="projects-grid">
+                    <template v-for="value in projects" :key="value.id">
+                        <div class="project-card group">
+                            <div class="preview">
+                                <img
+                                    :src="value.renderedImage || value.sourceImage"
+                                    alt="Project"
+                                />
+                            </div>
+                            <div class="badge">
+                                <span>Community</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <h3>{{ value.name }}</h3>
+                                <div class="meta">
+                                    <Clock :size="12" />
+                                    <span>{{
+                                        new Date(value.timestamp).toLocaleDateString()
+                                    }}</span>
+                                    <span>{{ value.sharedBy }}</span>
+                                </div>
+                                <div class="arrow">
+                                    <ArrowUpRight :size="18" />
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
         </section>
@@ -29,9 +69,48 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowRight, Layers } from 'lucide-vue-next'
+import { ArrowRight, ArrowUpRight, Clock, Layers } from 'lucide-vue-next'
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
 
 import AppNavigator from '../components/AppNavigator.vue'
-import Upload from '../components/Upload.vue';
+import Upload from '../components/Upload.vue'
+import { createProject } from '../lib/puter.action'
 import Button from '../ui/Button.vue'
+
+const router = useRouter()
+
+let projects = reactive<DesignItem[]>([])
+
+const handleUploadComplete = async (base64Image: string) => {
+    const newId = Date.now().toString()
+    const name = `Residence ${newId}`
+
+    const newItem = {
+        id: newId,
+        name,
+        sourceImage: base64Image,
+        renderedImage: undefined,
+        timestamp: Date.now()
+    }
+
+    const saved = await createProject({ item: newItem, visibility: 'private' })
+
+    if (!saved) {
+        console.error('创建项目失败')
+        return false
+    }
+
+    projects.push(newItem)
+
+    router.push({
+        name: 'renderDetail',
+        params: { id: newId },
+        query: {
+            initialImage: saved.sourceImage,
+            initialRendered: saved.renderedImage || null,
+            name
+        }
+    })
+}
 </script>

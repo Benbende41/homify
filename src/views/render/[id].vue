@@ -16,6 +16,6 @@ const id = route.params.id as string
 
 const base64 = ref<string>('')
 
-base64.value = route.query.data as string
+base64.value = route.query.initialImage as string
 </script>
 <style scoped></style>

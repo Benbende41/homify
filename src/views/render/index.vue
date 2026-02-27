@@ -1,7 +1,5 @@
 <template>
-    <div class="h-screen flex flex-col justify-center items-center gap-6 ">
+    <div class="h-screen flex flex-col justify-center items-center gap-6">
         <RouterView />
     </div>
 </template>
-
-<script setup lang="ts"></script>

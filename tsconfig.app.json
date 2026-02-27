@@ -12,7 +12,7 @@
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "type.d.ts"],
     "paths": {
         "@/*": ["./src/*"]
     }
