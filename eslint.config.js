@@ -3,6 +3,8 @@ import pluginVue from 'eslint-plugin-vue'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import VueEslintParser from 'vue-eslint-parser'
 import tsParser from '@typescript-eslint/parser'
+import globals from 'globals'
+
 export default [
     {
         files: ['**/*.{ts,tsx,vue}'],
@@ -19,6 +21,10 @@ export default [
             parser: VueEslintParser,
             parserOptions: {
                 parser: tsParser
+            },
+            globals: {
+                ...globals.browser,
+                ...globals.node
             }
         }
     }
