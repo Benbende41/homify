@@ -97,12 +97,12 @@ import { useDropZone } from '@vueuse/core'
 import { FileImage, Loader2, Maximize, Upload } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
 import { PROGRESS_INTERVAL_MS, PROGRESS_STEP, REDIRECT_DELAY_MS } from '../lib/constants'
 import { useUserStore } from '../store'
 
-const router = useRouter()
+const emits = defineEmits(['onComplete'])
+
 
 const userStore = useUserStore()
 const { isSignedIn } = storeToRefs(userStore)
@@ -194,13 +194,9 @@ const processFile = (file: File) => {
 
 // On complete callback
 const onComplete = (base64Data: string) => {
-    const newId = crypto.randomUUID()
 
-    router.push({
-        name: 'renderDetail',
-        params: { id: newId },
-        query: { data: base64Data }
-    })
+    emits('onComplete',base64Data)
+    
 
     // Reset state
     isProcessing.value = false
