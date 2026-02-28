@@ -101,14 +101,14 @@ const handleUploadComplete = async (base64Image: string) => {
         return false
     }
 
-    projects.push(newItem)
+    projects.push(saved)
 
     router.push({
         name: 'renderDetail',
         params: { id: newId },
         query: {
             initialImage: saved.sourceImage,
-            initialRendered: saved.renderedImage || null,
+            initialRender: saved.renderedImage || null,
             name
         }
     })
